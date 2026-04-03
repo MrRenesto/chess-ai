@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import pygame
 from ui.window import GameWindow
 from ui.board_view import BoardView
+from ui.piece_view import PieceView
 from game.game_manager import GameManager
 
 
@@ -20,6 +21,7 @@ def main():
     window = GameWindow()
     game_manager = GameManager()
     board_view = BoardView(window.get_screen())
+    piece_view = PieceView(window.get_screen(), board_view.square_size)
     
     window.start()
     
@@ -43,7 +45,9 @@ def main():
         board_view.draw_board()
         board_view.draw_coordinates()
         
-        # TODO: Render pieces
+        # Render pieces
+        piece_view.draw_all_pieces(game_manager.get_board(), board_view)
+        
         # TODO: Handle input
         # TODO: Update AI
         
