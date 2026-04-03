@@ -208,10 +208,34 @@ def generate_piece(name, color, is_white, draw_func):
     surface = pygame.Surface((SIZE, SIZE), pygame.SRCALPHA)
     surface.fill(TRANSPARENT)
     
+    # Draw the piece
     draw_func(surface, color, is_white)
     
+    # Add border to make pieces stand out
+    border_color = BLACK if is_white else WHITE
+    border_width = 2
+    
+    # Create a slightly larger version for the border
+    border_surface = pygame.Surface((SIZE, SIZE), pygame.SRCALPHA)
+    draw_func(border_surface, border_color, is_white)
+    
+    # Create final surface with border effect
+    final = pygame.Surface((SIZE, SIZE), pygame.SRCALPHA)
+    final.fill(TRANSPARENT)
+    
+    # Draw border by offsetting in 8 directions
+    offsets = [(-border_width, -border_width), (0, -border_width), (border_width, -border_width),
+               (-border_width, 0), (border_width, 0),
+               (-border_width, border_width), (0, border_width), (border_width, border_width)]
+    
+    for offset_x, offset_y in offsets:
+        final.blit(border_surface, (offset_x, offset_y))
+    
+    # Draw the main piece on top
+    final.blit(surface, (0, 0))
+    
     # Scale down to final size (100x100) for anti-aliasing effect
-    final_surface = pygame.transform.smoothscale(surface, (100, 100))
+    final_surface = pygame.transform.smoothscale(final, (100, 100))
     
     # Create directory if it doesn't exist
     os.makedirs("assets/pieces", exist_ok=True)
